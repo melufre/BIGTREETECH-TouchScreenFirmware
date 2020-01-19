@@ -36,11 +36,11 @@
 #define FAN_NUM      1    // set in 1~6
 
 //                       PLA      PETG       ABS     "CUSTOM1" "CUSTOM2"
-#define PREHEAT_BED      {60,      70,       100,       55,       55}
-#define PREHEAT_HOTEND   {200,     250,      230,       200,      200}
+#define PREHEAT_BED      {55,      70,       80,       55,       55}
+#define PREHEAT_HOTEND   {210,     230,      250,       200,      200}
 #define PREHEAT_TEXT     {"PLA",  "PETG",   "ABS",     "T2:",    "T3:"}
 
-#define HEAT_MAX_TEMP    {150,    275,       275,       275,       275,       275,       275}    //max temperature can be set
+#define HEAT_MAX_TEMP    {120,    300,       300,       275,       275,       275,       275}    //max temperature can be set
 #define HEAT_SIGN_ID     {"B:",   "T0:",     "T1:",     "T2:",     "T3:",     "T4:",     "T5:"}
 #define HEAT_DISPLAY_ID  {"Bed",  "T0",      "T1",      "T2",      "T3",      "T4",      "T5"}
 #define HEAT_CMD         {"M140", "M104 T0", "M104 T1", "M104 T2", "M104 T3", "M104 T4", "M104 T5" };
@@ -67,8 +67,8 @@
 #define X_MIN_POS 0
 #define Y_MIN_POS 0
 #define Z_MIN_POS 0
-#define X_MAX_POS 300
-#define Y_MAX_POS 300
+#define X_MAX_POS 295
+#define Y_MAX_POS 290
 #define Z_MAX_POS 400
 
 // Specify a pause position as { X, Y, Z_raise }
@@ -122,7 +122,7 @@
 
 //Enable Status Screen
 //----USE ICONS FROM MATERIAL THEME ONLY---//
-#define STATUS_SCREEN
+//#define STATUS_SCREEN
 
 /**
  * Enable gocde files list mode
@@ -177,14 +177,14 @@
  * The format of the custom icon is as follows
  * Bit depth: 24 / 32 bit, Pixel size: 95*95(for TFT35), 70*70(for TFT28/TFT24)
  */
-#define CUSTOM_0_LABEL "Restore EEPROM"
-#define CUSTOM_0_GCODE "M501\n"
-#define CUSTOM_1_LABEL "Custom2"
-#define CUSTOM_1_GCODE "M105\n"
-//#define CUSTOM_2_LABEL "Custom2"
-//#define CUSTOM_2_GCODE "M105\n"
-//#define CUSTOM_3_LABEL "Custom3"
-//#define CUSTOM_3_GCODE "M105\n"
+#define CUSTOM_0_LABEL "Mesh report"
+#define CUSTOM_0_GCODE "M420 V1\n"
+#define CUSTOM_1_LABEL "center bed"
+#define CUSTOM_1_GCODE "G0 X150 Y150 Z10 F6000\n"
+#define CUSTOM_2_LABEL "DIS END stop"
+#define CUSTOM_2_GCODE "M211 S0\n"
+#define CUSTOM_3_LABEL "EN END stop"
+#define CUSTOM_3_GCODE "M211 S1\n"
 //#define CUSTOM_4_LABEL "Custom4"
 //#define CUSTOM_4_GCODE "M105\n"
 //#define CUSTOM_5_LABEL "Custom5"

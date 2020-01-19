@@ -277,6 +277,7 @@ void loopCheckHeater(void)
     if(update_waiting == true)                {nowTime=OS_GetTime();break;}
     if(OS_GetTime()<nowTime+update_time)       break;
     if(RequestCommandInfoIsRunning())          break; //to avoid colision in Gcode response processing
+    if(infoMenu.menu[infoMenu.cur] == menuTerminal) break; //to avoid colision in terminal window
     if(storeCmd("M105\n")==false)              break;
 
     nowTime=OS_GetTime();

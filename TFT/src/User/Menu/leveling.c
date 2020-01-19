@@ -66,7 +66,7 @@ LABEL_LEVELING,
   {ICON_POINT_2,               LABEL_POINT_2},
   {ICON_POINT_3,               LABEL_POINT_3},
   {ICON_POINT_4,               LABEL_POINT_4},
-  {ICON_BACKGROUND,            LABEL_BACKGROUND},
+  {ICON_MAINMENU,              "Centrer"},
   {ICON_BACKGROUND,            LABEL_BACKGROUND},
   {ICON_BACKGROUND,            LABEL_BACKGROUND},
   {ICON_BACK,                  LABEL_BACK},}
@@ -79,6 +79,8 @@ void moveToLevelingPoint(u8 point)
     {LEVELING_POINT_2_X, LEVELING_POINT_2_Y},
     {LEVELING_POINT_3_X, LEVELING_POINT_3_Y},
     {LEVELING_POINT_4_X, LEVELING_POINT_4_Y},
+    {X_MAX_POS/2, Y_MAX_POS/2},
+    
   };
   if(coordinateIsClear() == false)
   {
@@ -102,6 +104,7 @@ void menuManualLeveling(void)
       case KEY_ICON_1: moveToLevelingPoint(1); break;
       case KEY_ICON_2: moveToLevelingPoint(2); break;
       case KEY_ICON_3: moveToLevelingPoint(3); break;
+      case KEY_ICON_4: moveToLevelingPoint(4); break;
       case KEY_ICON_7:
         infoMenu.cur--; break;
       default:break;

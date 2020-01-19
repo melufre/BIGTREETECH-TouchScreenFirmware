@@ -10,11 +10,14 @@ lABEL_UNIFIEDHEAT,
   {ICON_HEAT,                 LABEL_HEAT},
   {ICON_FAN,                  LABEL_FAN},
   {ICON_COOLDOWN,             LABEL_COOLDOWN},
-  {ICON_BACKGROUND,           LABEL_BACKGROUND},
-  {ICON_BACKGROUND,           LABEL_BACKGROUND},
-  {ICON_BACKGROUND,           LABEL_BACKGROUND},
+  {ICON_PREHEAT_PLA,          LABEL_PREHEAT_PLA},
+  {ICON_PREHEAT_PETG,         LABEL_PREHEAT_PETG},
+  {ICON_PREHEAT_ABS,          LABEL_PREHEAT_ABS},
   {ICON_BACK,                 LABEL_BACK},}
 };
+
+const u16   preheat_bed_temp2[] = PREHEAT_BED;
+const u16   preheat_hotend_temp2[] = PREHEAT_HOTEND;
 
 void menuUnifiedHeat(void)
 {
@@ -34,7 +37,18 @@ void menuUnifiedHeat(void)
           heatSetTargetTemp(i, 0);
         }
         break;
-        
+      case KEY_ICON_4: 
+            heatSetTargetTemp(BED, preheat_bed_temp2[0]);
+            heatSetTargetTemp(heatGetCurrentToolNozzle(), preheat_hotend_temp2[0]);
+            break;
+      case KEY_ICON_5: 
+            heatSetTargetTemp(BED, preheat_bed_temp2[1]);
+            heatSetTargetTemp(heatGetCurrentToolNozzle(), preheat_hotend_temp2[1]);
+            break;
+      case KEY_ICON_6: 
+            heatSetTargetTemp(BED, preheat_bed_temp2[2]);
+            heatSetTargetTemp(heatGetCurrentToolNozzle(), preheat_hotend_temp2[2]);
+            break;
       case KEY_ICON_7: infoMenu.cur--;      break;
       default:break;            
     }

@@ -112,8 +112,8 @@ void menuSendGcode(void)
 {
   GUI_RECT gcodeRect = {rect_of_Gkey[GKEY_BACK].x1+10, rect_of_Gkey[GKEY_BACK].y0, rect_of_Gkey[GKEY_SEND].x0-10, rect_of_Gkey[GKEY_SEND].y1};
   
-  char gcodeBuf[CMD_MAX_CHAR] = {0};
-  uint8_t nowIndex = 0,
+  char gcodeBuf[CMD_MAX_CHAR] = {'M','4','2','0',' ','V','1',0};
+  uint8_t nowIndex = 7,
           lastIndex = 0;
   GKEY_VALUES key_num = GKEY_IDLE;
   menuDrawSendGcode();

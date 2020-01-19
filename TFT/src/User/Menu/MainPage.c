@@ -14,7 +14,15 @@ LABEL_READY,
     {ICON_GCODE,                LABEL_GCODE},
     {ICON_STOP,                 LABEL_EMERGENCYSTOP},
     {ICON_SETTINGS,             LABEL_SETTINGS},
+    #ifdef STATUS_SCREEN
     {ICON_BACK,                 LABEL_BACK},}
+    #else
+      #ifdef AUTO_BED_LEVELING
+      {ICON_LEVELING,             LABEL_ABL},}  
+      #else
+      {ICON_LEVELING,             LABEL_LEVELING},}
+      #endif
+    #endif
   #else
   #ifdef STATUS_SCREEN
    {{ICON_HEAT,                 LABEL_PREHEAT},
@@ -72,7 +80,18 @@ void menuMain(void)
           break;
         
         case KEY_ICON_6: infoMenu.menu[++infoMenu.cur] = menuSettings;        break;
-        case KEY_ICON_7: infoMenu.cur--;        break;
+        case KEY_ICON_7:
+        #ifdef STATUS_SCREEN 
+          infoMenu.cur--;        
+        #else
+          #ifdef AUTO_BED_LEVELING
+           storeCmd("G28\n");
+           storeCmd("G29\n");
+          #else
+            infoMenu.menu[++infoMenu.cur] = menuManualLeveling;
+          #endif
+        #endif
+        break;
         default:break;
       #else
       #ifdef STATUS_SCREEN

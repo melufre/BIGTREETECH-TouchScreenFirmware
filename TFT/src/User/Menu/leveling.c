@@ -18,7 +18,7 @@ LABEL_ABL,
 void menuAutoLeveling(void)
 {
   KEY_VALUES key_num=KEY_IDLE;
-  menuDrawPage(&autoLevelingItems,false);
+  menuDrawPage(&autoLevelingItems);
   while(infoMenu.menu[infoMenu.cur] == menuAutoLeveling)
   {
     key_num = menuKeyGetValue();
@@ -27,6 +27,9 @@ void menuAutoLeveling(void)
       case KEY_ICON_0:
         storeCmd("G28\n");
         storeCmd("G29\n");
+        #ifdef AUTO_SAVE_LOAD_LEVELING_VALUE
+          storeCmd("M500\n");
+        #endif
         break;
       case KEY_ICON_1:
         storeCmd("M280 P0 S10\n"); //Push-pin Down (deploy) 
@@ -66,7 +69,7 @@ LABEL_LEVELING,
   {ICON_POINT_2,               LABEL_POINT_2},
   {ICON_POINT_3,               LABEL_POINT_3},
   {ICON_POINT_4,               LABEL_POINT_4},
-  {ICON_MAINMENU,              "Centrer"},
+  {ICON_MAINMENU,              LABEL_BACKGROUND}, //"Centrer"
   {ICON_BACKGROUND,            LABEL_BACKGROUND},
   {ICON_BACKGROUND,            LABEL_BACKGROUND},
   {ICON_BACK,                  LABEL_BACK},}
@@ -94,7 +97,7 @@ void moveToLevelingPoint(u8 point)
 void menuManualLeveling(void)
 {
   KEY_VALUES key_num=KEY_IDLE;
-  menuDrawPage(&manualLevelingItems,false);
+  menuDrawPage(&manualLevelingItems);
   while(infoMenu.menu[infoMenu.cur] == menuManualLeveling)
   {
     key_num = menuKeyGetValue();

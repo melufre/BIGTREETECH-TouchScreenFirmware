@@ -31,14 +31,22 @@
 // Show BTT bootscreen when starting up
 #define SHOW_BTT_BOOTSCREEN
 
+// TFT mode color
+#define TITLE_BACKGROUND_COLOR      BLACK  // Title background color // 0xD928
+#define BACKGROUND_COLOR            BLACK  // Background color // 0x0A29
+#define FONT_COLOR                  WHITE  // Font foreground color
+#define REMINDER_FONT_COLOR         RED    // Reminder font color, such as: "No print attached", "Busy process", etc...
+#define VOLUME_REMINDER_FONT_COLOR  GBLUE  // Volume reminder font color,such as: "Card inserted", "Card removed"
+
+
 #define TOOL_NUM     1    // set in 1~6
 #define EXTRUDER_NUM 1    // set in 1~6
 #define FAN_NUM      1    // set in 1~6
 
-//                       PLA      PETG       ABS     "CUSTOM1" "CUSTOM2"
-#define PREHEAT_BED      {55,      70,       80,       55,       55}
-#define PREHEAT_HOTEND   {210,     230,      250,       200,      200}
-#define PREHEAT_TEXT     {"PLA",  "PETG",   "ABS",     "T2:",    "T3:"}
+//                       PLA      PETG       ABS
+#define PREHEAT_BED      {55,      70,       80}
+#define PREHEAT_HOTEND   {210,     230,      250}
+#define PREHEAT_TEXT     {"PLA",  "PETG",   "ABS"}
 
 #define HEAT_MAX_TEMP    {120,    300,       300,       275,       275,       275,       275}    //max temperature can be set
 #define HEAT_SIGN_ID     {"B:",   "T0:",     "T1:",     "T2:",     "T3:",     "T4:",     "T5:"}
@@ -57,7 +65,8 @@
 
 // Default move speed mm/min
 #define DEFAULT_SPEED_MOVE      3000
-
+#define SPEED_MOVE_SLOW         1000
+#define SPEED_MOVE_FAST         5000
 // Extrude speed mm/min
 #define EXTRUDE_SLOW_SPEED      60
 #define EXTRUDE_NORMAL_SPEED    600
@@ -73,7 +82,7 @@
 
 // Specify a pause position as { X, Y, Z_raise }
 #define NOZZLE_PAUSE_RETRACT_LENGTH 15   // (mm)
-#define NOZZLE_PAUSE_PURGE_LENGTH   16   // (mm)
+#define NOZZLE_RESUME_PURGE_LENGTH  16   // (mm)
 #define NOZZLE_PAUSE_X_POSITION     (X_MIN_POS + 10)  // (mm) Must be an integer
 #define NOZZLE_PAUSE_Y_POSITION     (Y_MIN_POS + 10)  // (mm) Must be an integer
 #define NOZZLE_PAUSE_Z_RAISE        20   // (mm)
@@ -81,7 +90,13 @@
 #define NOZZLE_PAUSE_XY_FEEDRATE    6000 // (mm/min) X and Y axes feedrate
 #define NOZZLE_PAUSE_Z_FEEDRATE     600  // (mm/min) Z axis feedrate
 
+// Send G29 for auto bed leveling
 #define AUTO_BED_LEVELING
+#ifdef AUTO_BED_LEVELING
+  // Enable this will send "M500" after "G29" to store leveling value
+  // and send "M420 S1" to enable leveling state after startup
+  // #define AUTO_SAVE_LOAD_LEVELING_VALUE
+#endif
 
 // Move to four corner points to Leveling manually (Point 1, Point 2, Point 3, Point 4)
 #define LEVELING_POINT_1_X         (X_MIN_POS + 20)
@@ -112,28 +127,29 @@
 // update the icons from alternate icon folder
 #define ALTERNATIVE_MOVE_MENU
 
-//Invert the Y Axis move Direction
+// Invert the Y Axis move Direction
+// this does not work if LIST MODE is enabled. To invert y axis in LIST MODE go to setting->feature settings
 //#define INVERT_YAXIS
 
+//Invert the Z Axis move Direction
+// this does not work if LIST MODE is enabled. To invert z axis in LIST MODE go to setting->feature settings
+//#define INVERT_ZAXIS
 
 // Enable Unified Move Menu
 // Move, Home, Extrude, ABL at one Place and bring Gcode Menu on Home Menu
 #define UNIFIED_MENU
 
-//Enable Status Screen
-//----USE ICONS FROM MATERIAL THEME ONLY---//
 //#define STATUS_SCREEN
-
 /**
- * Enable gocde files list mode
+ * Enable list mode in Files menu and settings menu
  * It is friendly to display long file name, but the model preview feature is not available
  * Disable this if you want to use the model preview feature
  */
-#define GCODE_LIST_MODE
+#define MENU_LIST_MODE
 
 
 //-------RESET SETTINGS & TOUCH SCREEN CALIBRATION------||
-//to reset the touch screen create a text file with name 'reset.txt' in root folder of the sd card and press reset button.
+// To reset the touch screen create a text file with name 'reset.txt' in root folder of the sd card and press reset button.
 
 
 // SD support
@@ -168,28 +184,54 @@
 
 #define SHOW_FAN_PERCENTAGE // enable to show fan speed as a percentage instead of a value
 
-/**
- * Support up to 7 custom gcodes, uncomment CUSTOM_X_LABEL and CUSTOM_X_GCODE to enable custom gcode
+/** CUSTOM GCODE COMMANDS
+ * Support up to 7 custom gcodes in Icon mode and 15 in List Mode.
+ * Uncomment CUSTOM_X_LABEL and CUSTOM_X_GCODE to enable custom gcode.
  * CUSTOM_X_LABEL is the name of the custom button, CUSTOM_X_GCODE
  * CUSTOM_X_GCODE is the gcode to be sent by the custom button, end with '\n'
- * You also need to customize the icon corresponding to the command
+ * You also need to customize the icon corresponding to the command if MENU_LIST_MODE is not enabled.
  * Copy your custom icon to the SD card to be updated, such as:"TFT35/bmp/Custom0.bmp", "TFT24/bmp/Custom1.bmp", etc...
  * The format of the custom icon is as follows
  * Bit depth: 24 / 32 bit, Pixel size: 95*95(for TFT35), 70*70(for TFT28/TFT24)
  */
-#define CUSTOM_0_LABEL "Mesh report"
-#define CUSTOM_0_GCODE "M420 V1\n"
-#define CUSTOM_1_LABEL "center bed"
-#define CUSTOM_1_GCODE "G0 X150 Y150 Z10 F6000\n"
-#define CUSTOM_2_LABEL "DIS END stop"
-#define CUSTOM_2_GCODE "M211 S0\n"
-#define CUSTOM_3_LABEL "EN END stop"
-#define CUSTOM_3_GCODE "M211 S1\n"
-//#define CUSTOM_4_LABEL "Custom4"
-//#define CUSTOM_4_GCODE "M105\n"
-//#define CUSTOM_5_LABEL "Custom5"
-//#define CUSTOM_5_GCODE "M105\n"
+#define CUSTOM_0_LABEL "Save EEPROM"
+#define CUSTOM_0_GCODE "M500\n"
+#define CUSTOM_1_LABEL "Disable Steppers"
+#define CUSTOM_1_GCODE "M84\n"
+#define CUSTOM_2_LABEL "init SD Card"
+#define CUSTOM_2_GCODE "M21\n"
+#define CUSTOM_3_LABEL "Release Sd Card"
+#define CUSTOM_3_GCODE "M22\n"
+#define CUSTOM_4_LABEL "DIS END stop"
+#define CUSTOM_4_GCODE "M211 S0\n"
+#define CUSTOM_5_LABEL "EN END stop"
+#define CUSTOM_5_GCODE "M211 S1\n"
+
 //#define CUSTOM_6_LABEL "Custom6"
 //#define CUSTOM_6_GCODE "M105\n"
+
+/*
+custom gcode below are compatible only if MENU_LIST_MODE is active
+*/
+#ifdef MENU_LIST_MODE
+//#define CUSTOM_7_LABEL "Custom7"
+//#define CUSTOM_7_GCODE "M105\n"
+//#define CUSTOM_8_LABEL "Custom8"
+//#define CUSTOM_8_GCODE "M105\n"
+//#define CUSTOM_9_LABEL "Custom9"
+//#define CUSTOM_9_GCODE "M105\n"
+//#define CUSTOM_10_LABEL "Custom10"
+//#define CUSTOM_10_GCODE "M105\n"
+//#define CUSTOM_11_LABEL "Custom11"
+//#define CUSTOM_11_GCODE "M105\n"
+//#define CUSTOM_12_LABEL "Custom12"
+//#define CUSTOM_12_GCODE "M105\n"
+//#define CUSTOM_13_LABEL "Custom13"
+//#define CUSTOM_13_GCODE "M105\n"
+//#define CUSTOM_14_LABEL "Custom14"
+//#define CUSTOM_14_GCODE "M105\n"
+#endif
+
+#define CANCEL_PRINT_GCODE "G28 X0 Y0\n"
 
 #endif

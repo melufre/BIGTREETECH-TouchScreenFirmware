@@ -22,7 +22,7 @@ const u16   preheat_hotend_temp2[] = PREHEAT_HOTEND;
 void menuUnifiedHeat(void)
 {
   KEY_VALUES key_num = KEY_IDLE;	
-  menuDrawPage(&UnifiedHeatItems,false);
+  menuDrawPage(&UnifiedHeatItems);
   while(infoMenu.menu[infoMenu.cur] == menuUnifiedHeat)
   {
     key_num = menuKeyGetValue();
@@ -55,4 +55,3 @@ void menuUnifiedHeat(void)
     loopProcess();
   }
 }
-

@@ -6,8 +6,8 @@ bool WaitingGcodeResponse=0;
 
 static void resetRequestCommandInfo(void) 
 {
-  requestCommandInfo.cmd_rev_buf = malloc(CMD_MAX_REV);
-  while(!requestCommandInfo.cmd_rev_buf); // malloc failed
+  //requestCommandInfo.cmd_rev_buf = malloc(CMD_MAX_REV);
+  //while(!requestCommandInfo.cmd_rev_buf); // malloc failed
   memset(requestCommandInfo.cmd_rev_buf,0,CMD_MAX_REV);
   requestCommandInfo.inWaitResponse = true;
   requestCommandInfo.inResponse = false;
@@ -22,7 +22,7 @@ bool RequestCommandInfoIsRunning(void)
 
 void clearRequestCommandInfo(void) 
 {
-  free(requestCommandInfo.cmd_rev_buf);
+  //free(requestCommandInfo.cmd_rev_buf);
 }
 
 /*
@@ -36,6 +36,9 @@ void clearRequestCommandInfo(void)
 */
 bool request_M21(void)
 {
+  char tempstr[10];
+  int8_t disp_col=0,disp_lig=2;
+  GUI_DispStringInRect(LCD_WIDTH*disp_col/8, LCD_HEIGHT*disp_lig/8, LCD_WIDTH*(disp_col+1)/8, LCD_HEIGHT*(disp_lig+1)/8, "M21");disp_col++;
   strcpy(requestCommandInfo.command,"M21\n");
   strcpy(requestCommandInfo.startMagic,"SD");
   strcpy(requestCommandInfo.stopMagic,"card ok");
@@ -43,6 +46,9 @@ bool request_M21(void)
 
   resetRequestCommandInfo();
   mustStoreCmd(requestCommandInfo.command);
+  GUI_DispStringInRect(LCD_WIDTH*disp_col/8, LCD_HEIGHT*disp_lig/8, LCD_WIDTH*(disp_col+1)/8, LCD_HEIGHT*(disp_lig+1)/8, "wait");disp_col++;
+  my_sprintf(tempstr, "%d %d",infoCmd.count,infoHost.wait); 
+  GUI_DispStringInRect(LCD_WIDTH*disp_col/8, LCD_HEIGHT*disp_lig/8, LCD_WIDTH*(disp_col+1)/8, LCD_HEIGHT*(disp_lig+1)/8, tempstr);disp_col++;
   // Wait for response
   WaitingGcodeResponse = 1;
   while (!requestCommandInfo.done)
@@ -51,6 +57,7 @@ bool request_M21(void)
   }
   WaitingGcodeResponse = 0;
   clearRequestCommandInfo();
+  GUI_DispStringInRect(LCD_WIDTH*disp_col/8, LCD_HEIGHT*disp_lig/8, LCD_WIDTH*(disp_col+1)/8, LCD_HEIGHT*(disp_lig+1)/8, "done");disp_col++;
   // Check reponse
   return !requestCommandInfo.inError;
 }

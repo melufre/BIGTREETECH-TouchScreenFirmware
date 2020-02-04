@@ -35,11 +35,15 @@ End file list
 */
 bool scanPrintFilesGcodeFs(void)
 {
+  int8_t disp_col=0,disp_lig=3;
+  GUI_DispStringInRect(LCD_WIDTH*disp_col/8, LCD_HEIGHT*disp_lig/8, LCD_WIDTH*(disp_col+1)/8, LCD_HEIGHT*(disp_lig+1)/8, "scan");disp_col++;
   clearInfoFile();
-
+  GUI_DispStringInRect(LCD_WIDTH*disp_col/8, LCD_HEIGHT*disp_lig/8, LCD_WIDTH*(disp_col+1)/8, LCD_HEIGHT*(disp_lig+1)/8, "M20");disp_col++;
   char *ret = request_M20();
+  GUI_DispStringInRect(LCD_WIDTH*disp_col/8, LCD_HEIGHT*disp_lig/8, LCD_WIDTH*(disp_col+1)/8, LCD_HEIGHT*(disp_lig+1)/8, "20%");disp_col++;  
   char *data = malloc(strlen(ret) + 1);
   strcpy(data,ret);
+  GUI_DispStringInRect(LCD_WIDTH*disp_col/8, LCD_HEIGHT*disp_lig/8, LCD_WIDTH*(disp_col+1)/8, LCD_HEIGHT*(disp_lig+1)/8, "40%");disp_col++;
   clearRequestCommandInfo();
   char s[3];
   
@@ -49,6 +53,7 @@ bool scanPrintFilesGcodeFs(void)
     strcpy(s, "\n");
     
   char *line = strtok(data, s);
+  GUI_DispStringInRect(LCD_WIDTH*disp_col/8, LCD_HEIGHT*disp_lig/8, LCD_WIDTH*(disp_col+1)/8, LCD_HEIGHT*(disp_lig+1)/8, "M33s");disp_col++;
   for (;line != NULL;line = strtok(NULL, s))
   {
     if ( strcmp(line,"Begin file list") == 0 || strcmp(line,"End file list") == 0 || strcmp(line,"ok") == 0) continue; // Start and Stop tag
@@ -72,7 +77,9 @@ bool scanPrintFilesGcodeFs(void)
       Pstr_tmp = strrchr (longfilemane ,'/'); //remove folder information
       if (Pstr_tmp == NULL) Pstr_tmp = longfilemane;
       else Pstr_tmp++;
-      infoFile.Longfile[infoFile.f_num]= malloc(strlen(Pstr_tmp) + 1);      
+      GUI_DispStringInRect(LCD_WIDTH*5/8, LCD_HEIGHT*disp_lig/8, LCD_WIDTH*(5+1)/8, LCD_HEIGHT*(disp_lig+1)/8, "   ");
+      infoFile.Longfile[infoFile.f_num]= malloc(strlen(Pstr_tmp) + 1);
+      GUI_DispStringInRect(LCD_WIDTH*5/8, LCD_HEIGHT*disp_lig/8, LCD_WIDTH*(5+1)/8, LCD_HEIGHT*(disp_lig+1)/8, "60%");
       if (infoFile.Longfile[infoFile.f_num] == NULL)
       {
         clearRequestCommandInfo();
@@ -82,8 +89,10 @@ bool scanPrintFilesGcodeFs(void)
       clearRequestCommandInfo();  // for M33
 
       char* rest = pline;  
-      char* file = strtok_r(rest," ",&rest);   //remove file size from pline   
+      char* file = strtok_r(rest," ",&rest);   //remove file size from pline 
+      GUI_DispStringInRect(LCD_WIDTH*6/8, LCD_HEIGHT*disp_lig/8, LCD_WIDTH*(6+1)/8, LCD_HEIGHT*(disp_lig+1)/8, "    ");  
       infoFile.file[infoFile.f_num] = malloc(strlen(file) + 1);
+      GUI_DispStringInRect(LCD_WIDTH*6/8, LCD_HEIGHT*disp_lig/8, LCD_WIDTH*(6+1)/8, LCD_HEIGHT*(disp_lig+1)/8, "80%");
       if (infoFile.file[infoFile.f_num] == NULL) break;
       strcpy(infoFile.file[infoFile.f_num++], file);
     }
@@ -118,6 +127,7 @@ bool scanPrintFilesGcodeFs(void)
     }
   }
   free(data);
+  GUI_DispStringInRect(LCD_WIDTH*disp_col/8, LCD_HEIGHT*disp_lig/8, LCD_WIDTH*(disp_col+1)/8, LCD_HEIGHT*(disp_lig+1)/8, "done");
   return true;
 }
 

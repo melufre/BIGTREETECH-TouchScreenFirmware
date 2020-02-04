@@ -16,6 +16,21 @@ LABEL_BACKGROUND,
   {ICON_MORE,                 LABEL_MORE},}
 };
 
+//1title, ITEM_PER_PAGE item(icon + label) 
+MENUITEMS BeforePrintingItems = {
+//  title
+LABEL_CONFIRM,
+// icon                       label
+ {{ICON_BACKGROUND,           LABEL_BACKGROUND},
+  {ICON_BACKGROUND,           LABEL_BACKGROUND},
+  {ICON_BACKGROUND,           LABEL_BACKGROUND},
+  {ICON_BACKGROUND,           LABEL_BACKGROUND},
+  {ICON_RESUME,               LABEL_PRINT},
+  {ICON_BACKGROUND,           LABEL_BACKGROUND},
+  {ICON_BACKGROUND,           LABEL_BACKGROUND},
+  {ICON_BACK,                 LABEL_BACK}}
+};
+
 const ITEM itemIsPause[2] = {
 // icon                       label
   {ICON_PAUSE,                LABEL_PAUSE},
@@ -128,7 +143,7 @@ u8 *getCurGcodeName(char *path)
   return (u8* )(&path[i+1]);
 }
 
-void menuBeforePrinting(void)
+void PeparePrinting(void)
 {
   long size = 0;
   switch (infoFile.source)
@@ -191,10 +206,29 @@ void menuBeforePrinting(void)
       break;
   }
   infoPrinting.printing = true;
-  infoMenu.menu[infoMenu.cur] = menuPrinting;
   printingItems.title.address = getCurGcodeName(infoFile.title);
+  infoMenu.menu[infoMenu.cur] = menuPrinting;
 }
 
+
+void menuBeforePrinting(void)
+{
+  KEY_VALUES key_num=KEY_IDLE;
+  menuDrawPage(&BeforePrintingItems);
+  if (infoFile.source == BOARD_SD) GUI_DispStringInRect(0, LCD_HEIGHT/8, LCD_WIDTH, LCD_HEIGHT*3/8, infoFile.Longfile[infoFile.f_num]);
+  else GUI_DispStringInRect(0, LCD_HEIGHT/8, LCD_WIDTH, LCD_HEIGHT*3/8, infoFile.file[infoFile.f_num]);
+  while(infoMenu.menu[infoMenu.cur] == menuBeforePrinting)
+  {
+    key_num = menuKeyGetValue();
+    switch(key_num)
+    {
+        case KEY_ICON_4: PeparePrinting(); break; 
+        case KEY_ICON_7: infoMenu.cur--;   break;
+        default:break;
+    }
+    loopProcess();
+  }
+}
 
 void resumeToPause(bool is_pause)
 {
@@ -533,7 +567,7 @@ void menuStopPrinting(void)
     {
       case KEY_POPUP_CONFIRM:
         abortPrinting();
-        infoMenu.cur-=2;
+        infoMenu.cur-=3;
         break;
 
       case KEY_POPUP_CANCEL:

@@ -264,7 +264,7 @@ void menuPrintFromSource(void)
   u8 update=0;
 
   GUI_Clear(BACKGROUND_COLOR);
-  GUI_DispStringInRect(0, 0, LCD_WIDTH, LCD_HEIGHT, textSelect(LABEL_LOADING));
+  GUI_DispStringInRect(0, LCD_HEIGHT/8, LCD_WIDTH, LCD_HEIGHT*2/8, textSelect(LABEL_LOADING));
 
   if (mountFS() == true && scanPrintFiles() == true)
   {
@@ -345,7 +345,7 @@ void menuPrintFromSource(void)
           {	
             if(infoHost.connected !=true) break;
             if(EnterDir(infoFile.file[key_num + start - infoFile.F_num]) == false) break;	
-            
+            infoFile.f_num=key_num + start - infoFile.F_num; //store really selected file index
             infoMenu.menu[++infoMenu.cur] = menuBeforePrinting;	
           }				
         }

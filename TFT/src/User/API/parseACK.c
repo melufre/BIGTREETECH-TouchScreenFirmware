@@ -9,6 +9,9 @@ int MODEselect;
 const char *const ignoreEcho[] = {
   "Now fresh file:",
   "Probe Z Offset:",
+  "M23",
+  "M24",
+  "SD card ok"
 };
 
 void setCurrentAckSrc(uint8_t src)

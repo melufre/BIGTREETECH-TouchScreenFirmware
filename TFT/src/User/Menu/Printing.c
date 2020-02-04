@@ -223,7 +223,7 @@ void menuBeforePrinting(void)
     switch(key_num)
     {
         case KEY_ICON_4: PeparePrinting(); break; 
-        case KEY_ICON_7: infoMenu.cur--;   break;
+        case KEY_ICON_7: infoMenu.cur-=2;   break;
         default:break;
     }
     loopProcess();

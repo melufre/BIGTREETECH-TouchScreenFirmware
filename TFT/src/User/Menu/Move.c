@@ -316,7 +316,7 @@ void update_gantry(void)
 {
   if (OS_GetTime() > nowTime + update_time)
   {
-    if (infoHost.connected == true && infoHost.wait == false){
+    if (infoHost.connected == true && infoHost.Marlin_wait_tmo == 0){
       storeCmd("M114\n");
     }
     drawXYZ();

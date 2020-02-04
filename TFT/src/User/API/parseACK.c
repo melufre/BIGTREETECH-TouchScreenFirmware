@@ -135,20 +135,20 @@ void parseACK(void)
       requestCommandInfo.inResponse = false;
       ackPopupInfo(errormagic);
     }
-    infoHost.wait = false;
+    infoHost.Marlin_wait_tmo = 0;
     goto parse_end;
   }  
   // end 
 
   if(ack_cmp("ok\n"))
   {
-    infoHost.wait = false;	
+    infoHost.Marlin_wait_tmo = 0;	
   }
   else
   {
     if(ack_seen("ok"))
     {
-      infoHost.wait = false;
+      infoHost.Marlin_wait_tmo = 0;
     }
     if(ack_seen("X:"))
     {

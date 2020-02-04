@@ -146,7 +146,11 @@ void clearCmdQueue(void)
 // Parse and send gcode cmd in infoCmd.
 void sendQueueCmd(void)
 {
-  if(infoHost.wait == true)    return;  
+  if(infoHost.Marlin_wait_tmo)
+  {
+    infoHost.Marlin_wait_tmo--;
+    return;  
+  } 
   if(infoCmd.count == 0)       return;
   
   bool avoid_terminal = false;
@@ -384,7 +388,7 @@ void sendQueueCmd(void)
   infoCmd.count--;
   infoCmd.index_r = (infoCmd.index_r + 1) % CMD_MAX_LIST;
   
-  infoHost.wait = infoHost.connected;          //
+  infoHost.Marlin_wait_tmo = infoHost.connected*250;          //
 
   powerFailedEnable(true);
 }

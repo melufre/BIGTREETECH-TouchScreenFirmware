@@ -47,17 +47,18 @@ bool request_M21(void)
   resetRequestCommandInfo();
   mustStoreCmd(requestCommandInfo.command);
   GUI_DispStringInRect(LCD_WIDTH*disp_col/8, LCD_HEIGHT*disp_lig/8, LCD_WIDTH*(disp_col+1)/8, LCD_HEIGHT*(disp_lig+1)/8, "wait");disp_col++;
-  my_sprintf(tempstr, "%d %d",infoCmd.count,infoHost.wait); 
-  GUI_DispStringInRect(LCD_WIDTH*disp_col/8, LCD_HEIGHT*disp_lig/8, LCD_WIDTH*(disp_col+1)/8, LCD_HEIGHT*(disp_lig+1)/8, tempstr);disp_col++;
   // Wait for response
   WaitingGcodeResponse = 1;
   while (!requestCommandInfo.done)
   {
     loopProcess();
+    my_sprintf(tempstr, "%d %d",infoCmd.count,infoHost.Marlin_wait_tmo); 
+    GUI_DispStringInRect(LCD_WIDTH*disp_col/8, LCD_HEIGHT*disp_lig/8, LCD_WIDTH*(disp_col+1)/8, LCD_HEIGHT*(disp_lig+1)/8, tempstr);
   }
   WaitingGcodeResponse = 0;
   clearRequestCommandInfo();
-  GUI_DispStringInRect(LCD_WIDTH*disp_col/8, LCD_HEIGHT*disp_lig/8, LCD_WIDTH*(disp_col+1)/8, LCD_HEIGHT*(disp_lig+1)/8, "done");disp_col++;
+  disp_col++;
+  GUI_DispStringInRect(LCD_WIDTH*disp_col/8, LCD_HEIGHT*disp_lig/8, LCD_WIDTH*(disp_col+1)/8, LCD_HEIGHT*(disp_lig+1)/8, "done");
   // Check reponse
   return !requestCommandInfo.inError;
 }

@@ -3,7 +3,7 @@
 #include "stdbool.h"
 #include "interfaceCmd.h"
 
-#define CMD_MAX_REV     5000
+#define CMD_MAX_REV     4500
 
 typedef struct {
     char command[CMD_MAX_CHAR];     // The command sent to printer

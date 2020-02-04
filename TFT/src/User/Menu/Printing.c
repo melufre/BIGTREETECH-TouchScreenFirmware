@@ -118,6 +118,8 @@ void startGcodeExecute(void)
 
 void endGcodeExecute(void)
 {
+  if (infoFile.source != BOARD_SD) //end procedure manage by marlin on the case of BOARD_SD
+  {
   mustStoreCmd("G90\n");
   mustStoreCmd("G92 E0\n");
   for(TOOL i = BED; i < HEATER_NUM; i++)
@@ -130,6 +132,7 @@ void endGcodeExecute(void)
   }
   mustStoreCmd("T0\n");
   mustStoreCmd("M18\n");
+  }
 }
 
 //only return gcode file name except path
@@ -546,9 +549,11 @@ void abortPrinting(void)
   }
 
   heatClearIsWaiting();
-  
-  mustStoreCmd("G0 Z%d F3000\n", limitValue(0, (int)coordinateGetAxisTarget(Z_AXIS) + 10, Z_MAX_POS));
-  mustStoreCmd(CANCEL_PRINT_GCODE);
+  if (infoFile.source != BOARD_SD) //end procedure manage by marlin on the case of BOARD_SD
+  {
+     mustStoreCmd("G0 Z%d F3000\n", limitValue(0, (int)coordinateGetAxisTarget(Z_AXIS) + 10, Z_MAX_POS));
+     mustStoreCmd(CANCEL_PRINT_GCODE);
+  }
 
   endPrinting();
   exitPrinting();
@@ -557,7 +562,8 @@ void abortPrinting(void)
 void menuStopPrinting(void)
 {
   u16 key_num = IDLE_TOUCH;
-
+if (infoFile.source != BOARD_SD)
+{
   popupDrawPage(bottomDoubleBtn, textSelect(LABEL_WARNING), textSelect(LABEL_STOP_PRINT), textSelect(LABEL_CONFIRM), textSelect(LABEL_CANNEL));
  
   while(infoMenu.menu[infoMenu.cur] == menuStopPrinting)
@@ -576,6 +582,11 @@ void menuStopPrinting(void)
     }
     loopProcess();
   }
+}
+else
+{
+ infoMenu.cur-=3; 
+}
 }
 
 // Shut down menu, when the hotend temperature is higher than "AUTO_SHUT_DOWN_MAXTEMP"

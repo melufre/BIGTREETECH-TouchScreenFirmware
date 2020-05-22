@@ -45,7 +45,7 @@
 
 //                       PLA      PETG       ABS
 #define PREHEAT_BED      {55,      70,       80}
-#define PREHEAT_HOTEND   {210,     230,      250}
+#define PREHEAT_HOTEND   {210,     235,      250}
 #define PREHEAT_TEXT     {"PLA",  "PETG",   "ABS"}
 
 #define HEAT_MAX_TEMP    {120,    300,       300,       275,       275,       275,       275}    //max temperature can be set

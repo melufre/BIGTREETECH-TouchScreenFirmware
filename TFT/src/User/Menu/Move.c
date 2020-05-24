@@ -7,8 +7,8 @@
 #ifdef MENU_LIST_MODE
     #define YGCODE_INC "G1 Y%.1f\n"
     #define YGCODE_DEC "G1 Y-%.1f\n"
-    #define ZGCODE_INC "G1 F100 Z%.1f\n"
-    #define ZGCODE_DEC "G1 F100 Z-%.1f\n"
+    #define ZGCODE_INC "G1 Z%.1f\n"
+    #define ZGCODE_DEC "G1 Z-%.1f\n"
 #else
   #ifdef INVERT_YAXIS
     #define LABEL_YAXIS_UP LABEL_Y_DEC

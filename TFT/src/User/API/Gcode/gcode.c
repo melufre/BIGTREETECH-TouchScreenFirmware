@@ -4,10 +4,10 @@
 REQUEST_COMMAND_INFO requestCommandInfo;
 bool WaitingGcodeResponse=0;
 
-static void resetRequestCommandInfo(void) 
+static void resetRequestCommandInfo(void)
 {
-  //requestCommandInfo.cmd_rev_buf = malloc(CMD_MAX_REV);
-  //while(!requestCommandInfo.cmd_rev_buf); // malloc failed
+  requestCommandInfo.cmd_rev_buf = malloc(CMD_MAX_REV);
+  while(!requestCommandInfo.cmd_rev_buf); // malloc failed
   memset(requestCommandInfo.cmd_rev_buf,0,CMD_MAX_REV);
   requestCommandInfo.inWaitResponse = true;
   requestCommandInfo.inResponse = false;
@@ -20,9 +20,9 @@ bool RequestCommandInfoIsRunning(void)
    return WaitingGcodeResponse;  //i try to use requestCommandInfo.done but does not work as expected ...
 }
 
-void clearRequestCommandInfo(void) 
+void clearRequestCommandInfo(void)
 {
-  //free(requestCommandInfo.cmd_rev_buf);
+  free(requestCommandInfo.cmd_rev_buf);
 }
 
 /*
@@ -106,7 +106,7 @@ char *request_M20(void)
 char * request_M33(char *filename)
 {
   sprintf(requestCommandInfo.command, "M33 %s\n",filename);
-  strcpy(requestCommandInfo.startMagic,"/"); //un caractere qui est dans la ligne a traiter
+  strcpy(requestCommandInfo.startMagic,"/"); //a character that is in the line to be treated
   strcpy(requestCommandInfo.stopMagic,"ok");
   strcpy(requestCommandInfo.errorMagic,"Cannot open subdir");
   resetRequestCommandInfo();
@@ -124,8 +124,8 @@ char * request_M33(char *filename)
 
 
 /**
- * Select the file to print 
- * 
+ * Select the file to print
+ *
  * >>> m23 YEST~1/TEST2/PI3MK2~5.GCO
  * SENDING:M23 YEST~1/TEST2/PI3MK2~5.GCO
  * echo:Now fresh file: YEST~1/TEST2/PI3MK2~5.GCO
@@ -149,13 +149,13 @@ long request_M23(char *filename)
   WaitingGcodeResponse = 0;
   // Find file size and report its.
   char *ptr;
-  long size = strtol(strstr(requestCommandInfo.cmd_rev_buf,"Size:")+5, &ptr, 10);  
+  long size = strtol(strstr(requestCommandInfo.cmd_rev_buf,"Size:")+5, &ptr, 10);
   clearRequestCommandInfo();
   return size;
 }
 
 /**
- * Start o resume print 
+ * Start o resume print
  **/
 bool request_M24(int pos)
 {
@@ -170,7 +170,7 @@ bool request_M24(int pos)
 }
 
 /**
- * Abort print 
+ * Abort print
  **/
 bool request_M524(void)
 {
@@ -178,7 +178,7 @@ bool request_M524(void)
   return true;
 }
 /**
- * Pause print 
+ * Pause print
  **/
 bool request_M25(void)
 {

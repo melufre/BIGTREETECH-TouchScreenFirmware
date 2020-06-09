@@ -41,7 +41,7 @@ __ALIGN_BEGIN USB_OTG_CORE_HANDLE USB_OTG_Core __ALIGN_END;
 __ALIGN_BEGIN USBH_HOST USB_Host __ALIGN_END;
 
 
-#ifdef U_DISK_SUPPROT
+#ifdef U_DISK_SUPPORT
 
 uint8_t u_disk_inserted = 0;
 
@@ -92,7 +92,7 @@ uint8_t MSG_UNREC_ERROR[] = "> UNRECOVERED ERROR STATE\n";
 
 
 /**
-* @brief  USBH_USR_Init 
+* @brief  USBH_USR_Init
 *         Displays the message on LCD for host lib initialization
 * @param  None
 * @retval None
@@ -118,7 +118,7 @@ void USBH_USR_Init(void)
 }
 
 /**
-* @brief  USBH_USR_DeviceAttached 
+* @brief  USBH_USR_DeviceAttached
 *         Displays the message on LCD on device attached
 * @param  None
 * @retval None
@@ -154,7 +154,7 @@ void USBH_USR_DeviceDisconnected(void)
 }
 
 /**
-* @brief  USBH_USR_ResetUSBDevice 
+* @brief  USBH_USR_ResetUSBDevice
 * @param  None
 * @retval None
 */
@@ -164,7 +164,7 @@ void USBH_USR_ResetDevice(void)
 }
 
 /**
-* @brief  USBH_USR_DeviceSpeedDetected 
+* @brief  USBH_USR_DeviceSpeedDetected
 *         Displays the message on LCD for device speed
 * @param  Device speed
 * @retval None
@@ -190,7 +190,7 @@ void USBH_USR_DeviceSpeedDetected(uint8_t DeviceSpeed)
 }
 
 /**
-* @brief  USBH_USR_Device_DescAvailable 
+* @brief  USBH_USR_Device_DescAvailable
 *         Displays the message on LCD for device descriptor
 * @param  device descriptor
 * @retval None
@@ -205,8 +205,8 @@ void USBH_USR_Device_DescAvailable(void *DeviceDesc)
 }
 
 /**
-* @brief  USBH_USR_DeviceAddressAssigned 
-*         USB device is successfully assigned the Address 
+* @brief  USBH_USR_DeviceAddressAssigned
+*         USB device is successfully assigned the Address
 * @param  None
 * @retval None
 */
@@ -216,7 +216,7 @@ void USBH_USR_DeviceAddressAssigned(void)
 }
 
 /**
-* @brief  USBH_USR_Conf_Desc 
+* @brief  USBH_USR_Conf_Desc
 *         Displays the message on LCD for configuration descriptor
 * @param  Configuration descriptor
 * @retval None
@@ -240,9 +240,9 @@ void USBH_USR_Configuration_DescAvailable(USBH_CfgDesc_TypeDef * cfgDesc,
 }
 
 /**
-* @brief  USBH_USR_Manufacturer_String 
-*         Displays the message on LCD for Manufacturer String 
-* @param  Manufacturer String 
+* @brief  USBH_USR_Manufacturer_String
+*         Displays the message on LCD for Manufacturer String
+* @param  Manufacturer String
 * @retval None
 */
 void USBH_USR_Manufacturer_String(void *ManufacturerString)
@@ -251,7 +251,7 @@ void USBH_USR_Manufacturer_String(void *ManufacturerString)
 }
 
 /**
-* @brief  USBH_USR_Product_String 
+* @brief  USBH_USR_Product_String
 *         Displays the message on LCD for Product String
 * @param  Product String
 * @retval None
@@ -262,9 +262,9 @@ void USBH_USR_Product_String(void *ProductString)
 }
 
 /**
-* @brief  USBH_USR_SerialNum_String 
-*         Displays the message on LCD for SerialNum_String 
-* @param  SerialNum_String 
+* @brief  USBH_USR_SerialNum_String
+*         Displays the message on LCD for SerialNum_String
+* @param  SerialNum_String
 * @retval None
 */
 void USBH_USR_SerialNum_String(void *SerialNumString)
@@ -273,7 +273,7 @@ void USBH_USR_SerialNum_String(void *SerialNumString)
 }
 
 /**
-* @brief  EnumerationDone 
+* @brief  EnumerationDone
 *         User response request is displayed to ask application jump to class
 * @param  None
 * @retval None
@@ -321,7 +321,7 @@ void USBH_USR_OverCurrentDetected(void)
 }
 
 /**
-* @brief  USBH_USR_MSC_Application 
+* @brief  USBH_USR_MSC_Application
 *         Demo application for mass storage
 * @param  None
 * @retval Status
@@ -345,7 +345,7 @@ int USBH_USR_MSC_Application(void)
 
     case USH_USR_FS_DRAW:
       break;
-    
+
     default:
       break;
   }
@@ -359,7 +359,7 @@ int USBH_USR_MSC_Application(void)
 * @retval None
 */
 void USBH_USR_DeInit(void)
-{  
+{
   USBH_USR_ApplicationState = USH_USR_FS_INIT;
 }
 
@@ -379,15 +379,21 @@ uint8_t USBH_UDISK_Read(uint8_t* buf, uint32_t sector, uint32_t cnt)
 
   if (HCD_IsDeviceConnected(&USB_OTG_Core))
   {
+    while(USBH_MSC_BOTXferParam.MSCState != USBH_MSC_DEFAULT_APPLI_STATE)
+    {
+      // Precess the unfinished USB event before being called by FatFs
+      USBH_Process(&USB_OTG_Core, &USB_Host);
+    }
+
     do
     {
       status = USBH_MSC_Read10(&USB_OTG_Core, buf, sector,512 * cnt);
       USBH_MSC_HandleBOTXfer(&USB_OTG_Core ,&USB_Host);
 
       if (!HCD_IsDeviceConnected(&USB_OTG_Core))
-      { 
+      {
         return 1;
-      }      
+      }
     }while (status == USBH_MSC_BUSY );
   }
 
@@ -403,14 +409,20 @@ uint8_t USBH_UDISK_Write(uint8_t* buf, uint32_t sector, uint32_t cnt)
   BYTE status = USBH_MSC_FAIL;
 
   if (HCD_IsDeviceConnected(&USB_OTG_Core))
-  {  
+  {
+    while(USBH_MSC_BOTXferParam.MSCState != USBH_MSC_DEFAULT_APPLI_STATE)
+    {
+      // Precess the unfinished USB event before being called by FatFs
+      USBH_Process(&USB_OTG_Core, &USB_Host);
+    }
+
     do
     {
       status = USBH_MSC_Write10(&USB_OTG_Core, buf, sector, 512 * cnt);
       USBH_MSC_HandleBOTXfer(&USB_OTG_Core, &USB_Host);
 
       if (!HCD_IsDeviceConnected(&USB_OTG_Core))
-      { 
+      {
         return 1;
       }
     }while (status == USBH_MSC_BUSY );

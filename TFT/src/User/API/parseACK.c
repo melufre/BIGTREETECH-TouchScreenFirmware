@@ -7,11 +7,21 @@ static u8 ack_cur_src = SERIAL_PORT;
 int MODEselect;
 // Ignore reply "echo:" message (don't display in popup menu)
 const char *const ignoreEcho[] = {
+  "busy: processing",
   "Now fresh file:",
+  "Now doing file:",
+  "Probe Offset",
   "Probe Z Offset:",
   "M23",
   "M24",
-  "SD card ok"
+  "SD card ok",
+  "Flow:",
+  "echo:;",     //M503
+  "echo:  G",   //M503
+  "echo:  M",   //M503
+  "Cap:",       //M115
+  "Config:",    //M360
+  "Settings Stored" // M500
 };
 
 void setCurrentAckSrc(uint8_t src)
